@@ -32,6 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
   String selectedOption2 = '00';
   String selectedOption3 = 'AM';
 
+  TextEditingController _num1Controller = TextEditingController();
+  TextEditingController _num2Controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _num1Controller.dispose();
+    _num2Controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     var _num1Controller;
@@ -117,11 +126,10 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                setState((){
-                  var ageController;
-                  var nameController;
-                  boxPersons.put('Key_${nameController.text}',Person(name:nameController.text,age:int.parse(ageController.text)),);
-                });
+                //setState((){
+                
+                  //boxPersons.put('Key_${nameController.text}',Person(num1:nameController.text,num2:int.parse(ageController.text)),);
+                //});
                 // Retrieve the entered numbers from the controllers
                 double number1 = double.tryParse(_num1Controller.text) ?? 0.0;
                 double number2 = double.tryParse(_num2Controller.text) ?? 0.0;
@@ -130,35 +138,56 @@ class _MyHomePageState extends State<MyHomePage> {
                 // For example, you can add them, subtract them, etc.
 
                 // For now, let's just print the sum
-                double sum = number1 + number2;
-                print('Sum: $sum');
+               // Add a new person to the boxPersons
+                boxPersons.add(Person(num1: number1, num2: number2));
+                
+                setState(() {
+                  // Clear the text fields after adding a person
+                  _num1Controller.clear();
+                  _num2Controller.clear();
+                });
               },
+              
               child: Text('Calculate Sum'),
             ),
-          ],
-        ),
-      ),
+          
       Expanded(
+  child: Padding(
+    padding: const EdgeInsets.all(5.0),
+    child: Card(
       child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListView.builder(
-              itemCount: 0, // Change this to the actual number of items
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: IconButton(
-                    onPressed: () {
-                      // Add functionality to the IconButton
-                    },
-                    icon: Icon(Icons.remove), // Corrected the icon usage
+        padding: const EdgeInsets.all(10.0),
+        child: ListView.builder(
+          itemCount: boxPersons.length, // Change this to the actual number of items
+          itemBuilder: (context, index) {
+            var person = boxPersons.getAt(index)as Person;
+
+            return ListTile(
+              leading: IconButton(
+                onPressed: () {
+                  // Add functionality to the IconButton
+                  // For example, you can remove the item from the list
+                  setState(() {
+                    boxPersons.deleteAt(index);
+                    // Assuming you have a List of items named 'itemsList'
+                    
+                  });
+                },
+                icon: const Icon(
+                  Icons.remove,
+              ),
+              ),
+              title: Text('Num1: ${person.num1}'),
+              subtitle: Text('Num2: ${person.num2.toString()}'),
+              trailing: Text('Sum: ${person.num1 + person.num2}')
+            );
+                      },
+                    ),
                   ),
-                  title: Text('Item $index'), // Add your item's title or content here
-                );
-              },
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

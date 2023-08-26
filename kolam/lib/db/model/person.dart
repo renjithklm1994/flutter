@@ -5,14 +5,14 @@ part 'person.g.dart';
 @HiveType(typeId: 1)
 class Person {
   Person({
-     this.name,
-     this.age,
+     this.num1,
+     this.num2,
   });
   @HiveField(0)
-  String name;
+  double num1;
 
   @HiveField(1)
-  int age;
+  double num2;
 
  
 }
