@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:myapp/boxes.dart';
 import 'package:myapp/db/functions/db_functions.dart';
 
 
-import 'db/model/data_model.dart';
+import 'db/model/person.dart';
 
 Future<void> main() async{
-  Hive.initFlutter();
-if(!Hive.isAdapterRegistered(StudentModelAdapter().typeId))
-{
-  Hive.registerAdapter(StudentModelAdapter());
-}
+ await Hive.initFlutter();
+Hive.registerAdapter(PersonAdapter());
+   boxPersons = await Hive.openBox<Person>('personBox');
   runApp(MyApp());
 }
 
@@ -37,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var _num1Controller;
     var _num2Controller;
-    getAllStudents();
+    
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -118,6 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
+                setState((){
+                  var ageController;
+                  var nameController;
+                  boxPersons.put('Key_${nameController.text}',Person(name:nameController.text,age:int.parse(ageController.text)),);
+                });
                 // Retrieve the entered numbers from the controllers
                 double number1 = double.tryParse(_num1Controller.text) ?? 0.0;
                 double number2 = double.tryParse(_num2Controller.text) ?? 0.0;
@@ -132,6 +136,29 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Calculate Sum'),
             ),
           ],
+        ),
+      ),
+      Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListView.builder(
+              itemCount: 0, // Change this to the actual number of items
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: IconButton(
+                    onPressed: () {
+                      // Add functionality to the IconButton
+                    },
+                    icon: Icon(Icons.remove), // Corrected the icon usage
+                  ),
+                  title: Text('Item $index'), // Add your item's title or content here
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
